@@ -32,25 +32,34 @@ for a working example with
 [mk0x/docker-clamav:alpine](https://hub.docker.com/r/mk0x/docker-clamav) as
 clamd backend.
 
-## Developing locally
+## Developing locally (with docker)
+
+Requirements:
+
+- docker
+
+Run the following to get up and running:
+
+```
+docker-compose up -d
+```
+
+After changing code, run the following command to renew the clamav-rest container:
+
+```
+docker-compose up -d --remove-orphans --build clamav_rest
+```
+
+## Developing locally (without docker)
 
 Requirements:
 
 - python3
 - pipenv
-- docker
 
 Run the following to get up and running:
 
 ```
 pipenv shell
 pipenv install
-docker-compose up -d
-```
-
-I'd recommend to test everything in a docker container. After changing code, run
-the following command to renew the clamav-rest container:
-
-```
-docker-compose up -d --remove-orphans --build clamav_rest
 ```
