@@ -1,0 +1,6 @@
+*
+!Pipfile
+!Pipfile.lock
+!clamav_rest.py
+!config.py
+!run.sh
