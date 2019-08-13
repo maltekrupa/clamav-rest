@@ -10,7 +10,7 @@ class BaseConfig(object):
     CLAMD_HOST = "localhost"
     CLAMD_PORT = 3310
     HOST = "0.0.0.0"
-    PORT = int(os.environ.get('PORT', '8090'))
+    PORT = int(os.environ.get('PORT', '8080'))
 
 
 class ProductionConfig(BaseConfig):

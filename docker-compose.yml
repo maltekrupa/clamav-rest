@@ -6,7 +6,7 @@ services:
     networks:
       - overlay
     ports:
-      - "8090:8090"
+      - "8080:8080"
   clamav:
     image: mk0x/docker-clamav:alpine
     networks:
