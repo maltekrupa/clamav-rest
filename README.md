@@ -32,6 +32,9 @@ for a working example with
 [mk0x/docker-clamav:alpine](https://hub.docker.com/r/mk0x/docker-clamav) as
 clamd backend.
 
+A container image is available at
+[dockerhub](https://hub.docker.com/r/temal/clamav-rest).
+
 ## Developing locally (with docker)
 
 Requirements:
