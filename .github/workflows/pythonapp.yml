@@ -1,7 +1,6 @@
-name: Python application
+name: Lint and test python
 
 on:
-  - push
   - pull_request
 
 jobs:
