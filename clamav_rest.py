@@ -14,10 +14,11 @@ logger = logging.getLogger('CLAMAV-REST')
 
 try:
     cd = clamd.ClamdNetworkSocket(
-        host=app.config['CLAMD_HOST'], port=app.config['CLAMD_PORT'])
+        host=app.config['CLAMD_HOST'],
+        port=app.config['CLAMD_PORT']
+    )
 except BaseException:
     logger.exception('error bootstrapping clamd for network socket')
-
 
 @app.route('/', methods=['POST'])
 def scan():
