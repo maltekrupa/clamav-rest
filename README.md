@@ -35,11 +35,15 @@ clamd backend.
 A container image is available at
 [dockerhub](https://hub.docker.com/r/temal/clamav-rest).
 
-## Developing locally (with docker)
+## Development
 
 Requirements:
 
+- python3
+- pipenv
 - docker
+
+### Starting service via docker
 
 Run the following to get up and running:
 
@@ -47,22 +51,30 @@ Run the following to get up and running:
 docker-compose up -d
 ```
 
+### Rebuild container after change
+
 After changing code, run the following command to renew the clamav-rest container:
 
 ```
 docker-compose up -d --remove-orphans --build clamav_rest
 ```
 
-## Developing locally (without docker)
+### Run tests locally
 
-Requirements:
-
-- python3
-- pipenv
-
-Run the following to get up and running:
+To run the tests, do the following:
 
 ```
 pipenv shell
 pipenv install
+python clamav_rest_test.py
 ```
+
+## Environment variables
+
+| Environment variable | Required | Default | Purpose |
+| -------------------- | -------- | ------- | ------- |
+| LOGLEVEL             | false    | INFO    | Loglevel |
+| CLAMD_HOST           | false    | clamav  | Hostname where to reach clamav container |
+| CLAMD_PORT           | false    | 3310    | Port where to reach clamav container |
+| LISTEN_HOST          | false    | 0.0.0.0 | IP to listen on inside container |
+| LISTEN_PORT          | false    | 8080    | Port to listen on inside container |

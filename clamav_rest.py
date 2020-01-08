@@ -76,7 +76,3 @@ def health_ready():
     except BaseException as e:
         logger.error(e)
         return 'Service Unavailable', 500
-
-
-if __name__ == '__main__':
-    app.run(host=app.config['LISTEN_HOST'], port=app.config['LISTEN_PORT'])
