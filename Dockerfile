@@ -18,10 +18,11 @@ ENV WORKDIR /app
 WORKDIR $WORKDIR
 ENV PYTHONUSERBASE $WORKDIR
 ENV PATH=$WORKDIR/bin:$PATH
+ENV prometheus_multiproc_dir /tmp
 
 ENV PORT 8080
 EXPOSE $PORT
 
 COPY --from=build-image /app /app/
 
-CMD ["/bin/sh", "/app/run.sh"]
+CMD ["/app/bin/gunicorn", "--config", "gunicorn.config.py", "clamav_rest:app"]

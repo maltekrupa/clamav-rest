@@ -1,16 +1,28 @@
+import os
+import shutil
+import tempfile
 import unittest
 from unittest.mock import patch
 
 import clamd
 
+# This is an ugly workaround to make sure we can import clamav_rest
+# which requires an environment variable pointing to a directory
+test_dir = tempfile.mkdtemp()
+os.environ['prometheus_multiproc_dir'] = test_dir
 import clamav_rest
+shutil.rmtree(test_dir)
 
 
 class ClamAVRESTTestCase(unittest.TestCase):
 
     def setUp(self):
-        clamav_rest.app.config['TESTING'] = True
         self.app = clamav_rest.app.test_client()
+        self.test_dir = tempfile.mkdtemp()
+        os.environ['prometheus_multiproc_dir'] = self.test_dir
+
+    def tearDown(self):
+        shutil.rmtree(self.test_dir)
 
     def test_healthcheck_live(self):
         response = self.app.get('/health/live')

@@ -3,11 +3,13 @@ import sys
 import timeit
 
 from flask import Flask, request, jsonify
+from prometheus_flask_exporter.multiprocess import GunicornInternalPrometheusMetrics
 
 import clamd
 
 app = Flask('CLAMAV-REST')
 app.config.from_pyfile('config.py')
+metrics = GunicornInternalPrometheusMetrics(app)
 
 logging.basicConfig(stream=sys.stdout, level=app.config['LOGLEVEL'])
 logger = logging.getLogger('CLAMAV-REST')
@@ -56,11 +58,13 @@ def scan():
 
 # Liveness probe goes here
 @app.route('/health/live', methods=['GET'])
+@metrics.do_not_track()
 def health_live():
     return 'OK', 200
 
 # Readyness probe goes here
 @app.route('/health/ready', methods=['GET'])
+@metrics.do_not_track()
 def health_ready():
     try:
         clamd_response = cd.ping()
