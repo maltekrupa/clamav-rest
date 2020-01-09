@@ -65,8 +65,8 @@ To run the tests, do the following:
 
 ```
 pipenv shell
-pipenv install
-python clamav_rest_test.py
+pipenv install -d
+pipenv run pytest
 ```
 
 ## Environment variables
