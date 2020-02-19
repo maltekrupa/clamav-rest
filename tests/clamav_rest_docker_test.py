@@ -110,6 +110,18 @@ def test_auth_post_works_with_virus(http_service_auth):
     assert json['reason'] == 'Win.Test.EICAR_HDB-1'
 
 
+def test_auth_post_fails_unauthenticated_with_file(http_service_auth):
+    response = requests.post(http_service_auth, files=plain_file)
+
+    assert response.status_code == 401
+
+
+def test_auth_post_fails_unauthenticated_with_virus(http_service_auth):
+    response = requests.post(http_service_auth, files=virus_file)
+
+    assert response.status_code == 401
+
+
 def test_auth_liveness_endpoint_is_unauthenticated(http_service_auth):
     response = requests.get(http_service_auth + '/health/live')
 
@@ -166,6 +178,23 @@ def test_auth_defunct_post_works_with_virus(http_service_auth_defunct):
     assert json['reason'] == 'Win.Test.EICAR_HDB-1'
 
 
+def test_auth_defunct_post_works_unauthenticated_with_file(http_service_auth_defunct):
+    response = requests.post(http_service_auth_defunct, files=plain_file)
+
+    json = response.json()
+    assert response.status_code == 200
+    assert not json['malware']
+
+
+def test_auth_defunct_post_works_unauthenticated_with_virus(http_service_auth_defunct):
+    response = requests.post(http_service_auth_defunct, files=virus_file)
+
+    json = response.json()
+    assert response.status_code == 200
+    assert json['malware']
+    assert json['reason'] == 'Win.Test.EICAR_HDB-1'
+
+
 def test_auth_defunct_liveness_endpoint_is_unauthenticated(http_service_auth_defunct):
     response = requests.get(http_service_auth_defunct + '/health/live')
 
@@ -176,4 +205,3 @@ def test_auth_defunct_prometheus_endpoint_is_unauthenticated(http_service_auth_d
     response = requests.get(http_service_auth_defunct + '/metrics')
 
     assert response.status_code == 200
-
