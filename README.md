@@ -35,6 +35,14 @@ clamd backend.
 A container image is available at
 [dockerhub](https://hub.docker.com/r/temal/clamav-rest).
 
+## Optional basic auth
+
+If you want to secure the virus scanning endpoint (`POST` on `/`) via basic
+auth, you'll have to provide both `AUTH_USERNAME` and `AUTH_PASSWORD` to make
+this work.
+
+If only one of them is set, basic auth is still disabled!
+
 ## Development
 
 Requirements:
@@ -78,3 +86,5 @@ pipenv run pytest
 | CLAMD_PORT           | false    | 3310    | Port where to reach clamav container |
 | LISTEN_HOST          | false    | 0.0.0.0 | IP to listen on inside container |
 | LISTEN_PORT          | false    | 8080    | Port to listen on inside container |
+| AUTH_USERNAME        | false    |         | Username for optional basic auth |
+| AUTH_PASSWORD        | false    |         | Password for optional basic auth |

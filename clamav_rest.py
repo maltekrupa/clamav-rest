@@ -3,11 +3,16 @@ import sys
 import timeit
 
 from flask import Flask, request, jsonify
-from prometheus_flask_exporter.multiprocess import GunicornInternalPrometheusMetrics
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import check_password_hash
+from prometheus_flask_exporter.multiprocess import (
+    GunicornInternalPrometheusMetrics
+    )
 
 import clamd
 
-app = Flask('CLAMAV-REST')
+app = Flask(__name__)
+auth = HTTPBasicAuth()
 app.config.from_pyfile('config.py')
 metrics = GunicornInternalPrometheusMetrics(app)
 
@@ -22,7 +27,22 @@ try:
 except BaseException:
     logger.exception('error bootstrapping clamd for network socket')
 
+
+@auth.verify_password
+def verify_password(username, password):
+    if app.config['AUTH_USERNAME'] and app.config['AUTH_PASSWORD_HASH']:
+        if app.config['AUTH_USERNAME'] == username:
+            return check_password_hash(
+                app.config['AUTH_PASSWORD_HASH'],
+                password)
+        else:
+            return False
+    else:
+        return True
+
+
 @app.route('/', methods=['POST'])
+@auth.login_required
 def scan():
     if len(request.files) != 1:
         return 'Provide a single file', 400
@@ -34,7 +54,11 @@ def scan():
     ))
 
     start_time = timeit.default_timer()
-    resp = cd.instream(file_data)
+    try:
+        resp = cd.instream(file_data)
+    except clamd.ConnectionError as err:
+        logger.error('clamd.ConnectionError: {}'.format(err))
+        return 'Service Unavailable', 502
     elapsed = timeit.default_timer() - start_time
 
     status, reason = resp['stream']

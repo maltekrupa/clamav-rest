@@ -10,7 +10,7 @@ import clamd
 # which requires an environment variable pointing to a directory
 test_dir = tempfile.mkdtemp()
 os.environ['prometheus_multiproc_dir'] = test_dir
-import clamav_rest
+import clamav_rest  # noqa: E402
 shutil.rmtree(test_dir)
 
 
