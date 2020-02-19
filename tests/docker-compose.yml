@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+
+  # without basic auth
+  clamav_rest:
+    build: ..
+    networks:
+      - overlay
+    ports:
+      - '8080:8080'
+
+  # with basic auth
+  clamav_rest_auth:
+    build: ..
+    networks:
+      - overlay
+    ports:
+      - '8081:8080'
+    environment:
+      - AUTH_USERNAME=foo
+      - AUTH_PASSWORD=bar
+
+  # with wrongly configured basic auth
+  clamav_rest_auth_defunct:
+    build: ..
+    networks:
+      - overlay
+    ports:
+      - '8082:8080'
+    environment:
+      - AUTH_USERNAME=foo
+
+  clamav:
+    image: quay.io/ukhomeofficedigital/clamav:latest
+    environment:
+      - UPDATE=false
+    networks:
+      - overlay
+    ports:
+      - '3310:3310'
+
+networks:
+  overlay:

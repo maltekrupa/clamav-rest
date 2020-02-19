@@ -6,13 +6,15 @@ verify_ssl = true
 [dev-packages]
 flake8 = '*'
 pytest = '*'
+requests = '*'
+pytest-docker = '==0.7.1'
 
 [packages]
 clamd = '==1.0.2'
 gunicorn = '==20.0.4'
 Flask = '==1.1.1'
-prometheus-flask-exporter = "==0.12.1"
-Flask-HTTPAuth = "==3.3.0"
+prometheus-flask-exporter = '==0.12.1'
+Flask-HTTPAuth = '==3.3.0'
 
 [requires]
 python_version = '3.8'
