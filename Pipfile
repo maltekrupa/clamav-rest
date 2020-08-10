@@ -7,13 +7,13 @@ verify_ssl = true
 flake8 = '*'
 pytest = '*'
 requests = '*'
-pytest-docker = '==0.7.2'
+pytest-docker = '==0.8.0'
 
 [packages]
 clamd = '==1.0.2'
 gunicorn = '==20.0.4'
 Flask = '==1.1.2'
-prometheus-flask-exporter = '==0.14.1'
+prometheus-flask-exporter = '==0.15.4'
 Flask-HTTPAuth = '==4.1.0'
 
 [requires]
