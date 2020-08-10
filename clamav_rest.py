@@ -80,11 +80,13 @@ def scan():
 
     return jsonify(response)
 
+
 # Liveness probe goes here
 @app.route('/health/live', methods=['GET'])
 @metrics.do_not_track()
 def health_live():
     return 'OK', 200
+
 
 # Readyness probe goes here
 @app.route('/health/ready', methods=['GET'])
