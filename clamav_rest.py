@@ -1,53 +1,52 @@
 import logging
 import sys
 import timeit
+from functools import wraps
 
-from flask import Flask, request, jsonify
-from flask_httpauth import HTTPBasicAuth
-from werkzeug.security import check_password_hash
-from prometheus_flask_exporter.multiprocess import (
-    GunicornInternalPrometheusMetrics
-    )
+from quart import Quart, request, jsonify, current_app, abort
 
 import clamd
 
-app = Flask(__name__)
-auth = HTTPBasicAuth()
+app = Quart(__name__)
 app.config.from_pyfile('config.py')
-metrics = GunicornInternalPrometheusMetrics(app)
 
 logging.basicConfig(stream=sys.stdout, level=app.config['LOGLEVEL'])
 logger = logging.getLogger('CLAMAV-REST')
 
 try:
-    cd = clamd.ClamdNetworkSocket(
+    cd = clamd.ClamdAsyncNetworkSocket(
         host=app.config['CLAMD_HOST'],
         port=app.config['CLAMD_PORT']
     )
 except BaseException:
     logger.exception('error bootstrapping clamd for network socket')
 
-
-@auth.verify_password
-def verify_password(username, password):
-    if app.config['AUTH_USERNAME'] and app.config['AUTH_PASSWORD_HASH']:
-        if app.config['AUTH_USERNAME'] == username:
-            return check_password_hash(
-                app.config['AUTH_PASSWORD_HASH'],
-                password)
+# https://gitlab.com/pgjones/quart-auth/-/issues/6#note_460844029
+def auth_required(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        auth = request.authorization
+        if (
+            auth is not None and
+            auth.type == "basic" and
+            auth.username == current_app.config["AUTH_USERNAME"] and
+            compare_digest(auth.password, current_app.config["AUTH_PASSWORD"])
+        ):
+            return await func(*args, **kwargs)
         else:
-            return False
-    else:
-        return True
+            abort(401)
+
+    return wrapper
 
 
+@auth_required
 @app.route('/', methods=['POST'])
-@auth.login_required
-def scan():
-    if len(request.files) != 1:
+async def scan():
+    files = await request.files
+    if len(files) != 1:
         return 'Provide a single file', 400
 
-    _, file_data = list(request.files.items())[0]
+    _, file_data = list(files.items())[0]
 
     logger.info('Scanning {file_name}'.format(
         file_name=file_data.filename
@@ -55,7 +54,7 @@ def scan():
 
     start_time = timeit.default_timer()
     try:
-        resp = cd.instream(file_data)
+        resp = await cd.instream(file_data)
     except clamd.ConnectionError as err:
         logger.error('clamd.ConnectionError: {}'.format(err))
         return 'Service Unavailable', 502
@@ -83,18 +82,16 @@ def scan():
 
 # Liveness probe goes here
 @app.route('/health/live', methods=['GET'])
-@metrics.do_not_track()
 def health_live():
     return 'OK', 200
 
 
 # Readyness probe goes here
 @app.route('/health/ready', methods=['GET'])
-@metrics.do_not_track()
-def health_ready():
+async def health_ready():
     try:
-        clamd_response = cd.ping()
-        if clamd_response == 'PONG':
+        clamd_response = await cd.ping()
+        if 'PONG' in clamd_response:
             return 'Service OK'
 
         logger.error('expected PONG from clamd container')

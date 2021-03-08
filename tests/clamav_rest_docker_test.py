@@ -1,3 +1,4 @@
+import asyncio
 import pytest
 import requests
 
@@ -25,6 +26,13 @@ def is_responsive(url):
     except ConnectionError:
         return False
 
+# https://github.com/pytest-dev/pytest-asyncio#async-fixtures
+@pytest.fixture(scope='function')
+def event_loop(request):
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
+
 
 @pytest.fixture(scope='session')
 def http_service(docker_ip, docker_services):
@@ -39,19 +47,22 @@ def http_service(docker_ip, docker_services):
     return url
 
 
-def test_plain_needs_post(http_service):
+@pytest.mark.asyncio
+async def test_plain_needs_post(http_service):
     response = requests.get(http_service)
 
     assert response.status_code == 405
 
 
-def test_plain_post_is_unavailable(http_service):
+@pytest.mark.asyncio
+async def test_plain_post_is_unavailable(http_service):
     response = requests.post(http_service)
 
     assert response.status_code == 400
 
 
-def test_plain_post_works_with_file(http_service):
+@pytest.mark.asyncio
+async def test_plain_post_works_with_file(http_service):
     response = requests.post(http_service, files=plain_file)
 
     json = response.json()
@@ -59,7 +70,8 @@ def test_plain_post_works_with_file(http_service):
     assert not json['malware']
 
 
-def test_plain_post_works_with_virus(http_service):
+@pytest.mark.asyncio
+async def test_plain_post_works_with_virus(http_service):
     response = requests.post(http_service, files=virus_file)
 
     json = response.json()
@@ -81,19 +93,22 @@ def http_service_auth(docker_ip, docker_services):
     return url
 
 
-def test_auth_needs_post(http_service_auth):
+@pytest.mark.asyncio
+async def test_auth_needs_post(http_service_auth):
     response = requests.get(http_service_auth, auth=auth)
 
     assert response.status_code == 405
 
 
-def test_auth_post_is_unavailable(http_service_auth):
+@pytest.mark.asyncio
+async def test_auth_post_is_unavailable(http_service_auth):
     response = requests.post(http_service_auth, auth=auth)
 
     assert response.status_code == 400
 
 
-def test_auth_post_works_with_file(http_service_auth):
+@pytest.mark.asyncio
+async def test_auth_post_works_with_file(http_service_auth):
     response = requests.post(http_service_auth, auth=auth, files=plain_file)
 
     json = response.json()
@@ -101,7 +116,8 @@ def test_auth_post_works_with_file(http_service_auth):
     assert not json['malware']
 
 
-def test_auth_post_works_with_virus(http_service_auth):
+@pytest.mark.asyncio
+async def test_auth_post_works_with_virus(http_service_auth):
     response = requests.post(http_service_auth, auth=auth, files=virus_file)
 
     json = response.json()
@@ -110,26 +126,23 @@ def test_auth_post_works_with_virus(http_service_auth):
     assert json['reason'] == 'Win.Test.EICAR_HDB-1'
 
 
-def test_auth_post_fails_unauthenticated_with_file(http_service_auth):
+@pytest.mark.asyncio
+async def test_auth_post_fails_unauthenticated_with_file(http_service_auth):
     response = requests.post(http_service_auth, files=plain_file)
 
     assert response.status_code == 401
 
 
-def test_auth_post_fails_unauthenticated_with_virus(http_service_auth):
+@pytest.mark.asyncio
+async def test_auth_post_fails_unauthenticated_with_virus(http_service_auth):
     response = requests.post(http_service_auth, files=virus_file)
 
     assert response.status_code == 401
 
 
-def test_auth_liveness_endpoint_is_unauthenticated(http_service_auth):
+@pytest.mark.asyncio
+async def test_auth_liveness_endpoint_is_unauthenticated(http_service_auth):
     response = requests.get(http_service_auth + '/health/live')
-
-    assert response.status_code == 200
-
-
-def test_auth_prometheus_endpoint_is_unauthenticated(http_service_auth):
-    response = requests.get(http_service_auth + '/metrics')
 
     assert response.status_code == 200
 
@@ -149,19 +162,22 @@ def http_service_auth_defunct(docker_ip, docker_services):
     return url
 
 
-def test_auth_defunct_needs_post(http_service_auth_defunct):
+@pytest.mark.asyncio
+async def test_auth_defunct_needs_post(http_service_auth_defunct):
     response = requests.get(http_service_auth_defunct, auth=auth)
 
     assert response.status_code == 405
 
 
-def test_auth_defunct_post_is_unavailable(http_service_auth_defunct):
+@pytest.mark.asyncio
+async def test_auth_defunct_post_is_unavailable(http_service_auth_defunct):
     response = requests.post(http_service_auth_defunct, auth=auth)
 
     assert response.status_code == 400
 
 
-def test_auth_defunct_post_works_with_file(http_service_auth_defunct):
+@pytest.mark.asyncio
+async def test_auth_defunct_post_works_with_file(http_service_auth_defunct):
     response = requests.post(http_service_auth_defunct, files=plain_file)
 
     json = response.json()
@@ -169,7 +185,8 @@ def test_auth_defunct_post_works_with_file(http_service_auth_defunct):
     assert not json['malware']
 
 
-def test_auth_defunct_post_works_with_virus(http_service_auth_defunct):
+@pytest.mark.asyncio
+async def test_auth_defunct_post_works_with_virus(http_service_auth_defunct):
     response = requests.post(http_service_auth_defunct, files=virus_file)
 
     json = response.json()
@@ -178,7 +195,8 @@ def test_auth_defunct_post_works_with_virus(http_service_auth_defunct):
     assert json['reason'] == 'Win.Test.EICAR_HDB-1'
 
 
-def test_auth_defunct_post_works_unauthenticated_with_file(http_service_auth_defunct):
+@pytest.mark.asyncio
+async def test_auth_defunct_post_works_unauthenticated_with_file(http_service_auth_defunct):
     response = requests.post(http_service_auth_defunct, files=plain_file)
 
     json = response.json()
@@ -186,7 +204,8 @@ def test_auth_defunct_post_works_unauthenticated_with_file(http_service_auth_def
     assert not json['malware']
 
 
-def test_auth_defunct_post_works_unauthenticated_with_virus(http_service_auth_defunct):
+@pytest.mark.asyncio
+async def test_auth_defunct_post_works_unauthenticated_with_virus(http_service_auth_defunct):
     response = requests.post(http_service_auth_defunct, files=virus_file)
 
     json = response.json()
@@ -195,13 +214,8 @@ def test_auth_defunct_post_works_unauthenticated_with_virus(http_service_auth_de
     assert json['reason'] == 'Win.Test.EICAR_HDB-1'
 
 
-def test_auth_defunct_liveness_endpoint_is_unauthenticated(http_service_auth_defunct):
+@pytest.mark.asyncio
+async def test_auth_defunct_liveness_endpoint_is_unauthenticated(http_service_auth_defunct):
     response = requests.get(http_service_auth_defunct + '/health/live')
-
-    assert response.status_code == 200
-
-
-def test_auth_defunct_prometheus_endpoint_is_unauthenticated(http_service_auth_defunct):
-    response = requests.get(http_service_auth_defunct + '/metrics')
 
     assert response.status_code == 200

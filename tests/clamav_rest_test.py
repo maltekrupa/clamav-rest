@@ -1,76 +1,59 @@
-import sys
-import os
-import shutil
-import tempfile
-import unittest
+import asyncio
 from unittest.mock import patch
 
+import pytest
 import clamd
 
-# This is an ugly workaround to make sure we can import clamav_rest
-# which requires an environment variable pointing to a directory
-test_dir = tempfile.mkdtemp()
-os.environ['prometheus_multiproc_dir'] = test_dir
-sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
-import clamav_rest  # noqa: E402
-shutil.rmtree(test_dir)
+import clamav_rest
 
+@pytest.mark.asyncio
+async def test_healthcheck_live():
+    client = clamav_rest.app.test_client()
 
-class ClamAVRESTTestCase(unittest.TestCase):
+    response = await client.get('/health/live')
+    assert response.status_code == 200
+    result = await response.get_data()
+    assert result == b'OK'
 
-    def setUp(self):
-        self.app = clamav_rest.app.test_client()
-        self.test_dir = tempfile.mkdtemp()
-        os.environ['prometheus_multiproc_dir'] = self.test_dir
+@pytest.mark.asyncio
+@patch('clamav_rest.cd.ping')
+async def test_healthcheck_ready(ping):
+    client = clamav_rest.app.test_client()
+    ping.return_value = 'PONG'
 
-    def tearDown(self):
-        shutil.rmtree(self.test_dir)
+    response = await client.get('/health/ready')
+    assert response.status_code == 200
+    result = await response.get_data()
+    assert result == b'Service OK'
 
-    def test_healthcheck_live(self):
-        response = self.app.get('/health/live')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, b'OK')
+@pytest.mark.asyncio
+@patch('clamav_rest.cd.ping')
+async def test_healthcheck_no_service(ping):
+    client = clamav_rest.app.test_client()
+    ping.side_effect = clamd.ConnectionError()
 
-    @patch('clamav_rest.cd.ping')
-    def test_healthcheck_ready(self, ping):
-        ping.return_value = 'PONG'
+    response = await client.get('/health/ready')
 
-        response = self.app.get('/health/ready')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, b'Service OK')
+    assert response.status_code == 502
+    result = await response.get_data()
+    assert result == b'Service Unavailable'
 
-    @patch('clamav_rest.cd.ping')
-    def test_healthcheck_no_service(self, ping):
-        ping.side_effect = clamd.ConnectionError()
+@pytest.mark.asyncio
+@patch('clamav_rest.cd.ping')
+async def test_healthcheck_unexpected_error(ping):
+    client = clamav_rest.app.test_client()
+    ping.side_effect = Exception('Oops')
 
-        response = self.app.get('/health/ready')
+    response = await client.get('/health/ready')
 
-        self.assertEqual(response.status_code, 502)
-        self.assertEqual(response.data, b'Service Unavailable')
+    assert response.status_code == 500
+    result = await response.get_data()
+    assert result == b'Service Unavailable'
 
-    @patch('clamav_rest.cd.ping')
-    def test_healthcheck_unexpected_error(self, ping):
-        ping.side_effect = Exception('Oops')
+@pytest.mark.asyncio
+async def test_scan_endpoint_requires_post():
+    client = clamav_rest.app.test_client()
 
-        response = self.app.get('/health/ready')
+    response = await client.get('/')
 
-        self.assertEqual(response.status_code, 500)
-        self.assertEqual(response.data, b'Service Unavailable')
-
-    @patch('clamav_rest.cd.ping')
-    def test_healthcheck_unexpected_error_original(self, ping):
-        ping.side_effect = Exception('Oops')
-
-        response = self.app.get('/health/ready')
-
-        self.assertEqual(response.status_code, 500)
-        self.assertEqual(response.data, b'Service Unavailable')
-
-    def test_scan_endpoint_requires_post(self):
-        response = self.app.get('/')
-
-        self.assertEqual(response.status_code, 405)
-
-
-if __name__ == '__main__':
-    unittest.main()
+    assert response.status_code == 405
