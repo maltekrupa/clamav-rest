@@ -1,10 +1,10 @@
-import asyncio
 from unittest.mock import patch
 
 import pytest
 import clamd
 
 import clamav_rest
+
 
 @pytest.mark.asyncio
 async def test_healthcheck_live():
@@ -14,6 +14,7 @@ async def test_healthcheck_live():
     assert response.status_code == 200
     result = await response.get_data()
     assert result == b'OK'
+
 
 @pytest.mark.asyncio
 @patch('clamav_rest.cd.ping')
@@ -25,6 +26,7 @@ async def test_healthcheck_ready(ping):
     assert response.status_code == 200
     result = await response.get_data()
     assert result == b'Service OK'
+
 
 @pytest.mark.asyncio
 @patch('clamav_rest.cd.ping')
@@ -38,6 +40,7 @@ async def test_healthcheck_no_service(ping):
     result = await response.get_data()
     assert result == b'Service Unavailable'
 
+
 @pytest.mark.asyncio
 @patch('clamav_rest.cd.ping')
 async def test_healthcheck_unexpected_error(ping):
@@ -49,6 +52,7 @@ async def test_healthcheck_unexpected_error(ping):
     assert response.status_code == 500
     result = await response.get_data()
     assert result == b'Service Unavailable'
+
 
 @pytest.mark.asyncio
 async def test_scan_endpoint_requires_post():

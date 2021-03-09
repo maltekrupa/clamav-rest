@@ -26,6 +26,7 @@ def is_responsive(url):
     except ConnectionError:
         return False
 
+
 # https://github.com/pytest-dev/pytest-asyncio#async-fixtures
 @pytest.fixture(scope='function')
 def event_loop(request):

@@ -2,6 +2,7 @@ import logging
 import sys
 import timeit
 from functools import wraps
+from secrets import compare_digest
 
 from quart import Quart, request, jsonify, current_app, abort
 
@@ -20,6 +21,7 @@ try:
     )
 except BaseException:
     logger.exception('error bootstrapping clamd for network socket')
+
 
 # https://gitlab.com/pgjones/quart-auth/-/issues/6#note_460844029
 def auth_required(func):
