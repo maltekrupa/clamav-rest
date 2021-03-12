@@ -4,6 +4,7 @@ ENV WORKDIR /app
 ENV PYTHONUSERBASE $WORKDIR
 ENV PATH=$WORKDIR/bin:$PATH
 
+RUN apk add -U git
 RUN pip install --upgrade pip pipenv
 
 WORKDIR $WORKDIR
@@ -18,11 +19,10 @@ ENV WORKDIR /app
 WORKDIR $WORKDIR
 ENV PYTHONUSERBASE $WORKDIR
 ENV PATH=$WORKDIR/bin:$PATH
-ENV prometheus_multiproc_dir /tmp
 
 ENV PORT 8080
 EXPOSE $PORT
 
 COPY --from=build-image /app /app/
 
-CMD ["/app/bin/gunicorn", "--config", "gunicorn.config.py", "clamav_rest:app"]
+CMD ["/app/bin/hypercorn", "-b", "0.0.0.0:8080", "clamav_rest:app"]

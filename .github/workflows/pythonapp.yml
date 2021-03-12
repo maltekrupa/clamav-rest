@@ -35,6 +35,9 @@ jobs:
     - name: Install dependencies
       run: |
         pipenv install -d
+    - name: Configure PYTHONPATH
+      run: |
+        echo "PYTHONPATH=${PYTHONPATH}:${PWD}" >> $GITHUB_ENV
     - name: Test with pytest
       run: |
         pipenv run pytest

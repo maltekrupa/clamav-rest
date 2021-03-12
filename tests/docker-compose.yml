@@ -32,9 +32,7 @@ services:
       - AUTH_USERNAME=foo
 
   clamav:
-    image: quay.io/ukhomeofficedigital/clamav:latest
-    environment:
-      - UPDATE=false
+    image: mkodockx/docker-clamav
     networks:
       - overlay
     ports:
