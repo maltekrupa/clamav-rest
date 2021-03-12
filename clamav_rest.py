@@ -27,22 +27,27 @@ except BaseException:
 def auth_required(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
-        auth = request.authorization
         if (
-            auth is not None and
-            auth.type == "basic" and
-            auth.username == current_app.config["AUTH_USERNAME"] and
-            compare_digest(auth.password, current_app.config["AUTH_PASSWORD"])
+            current_app.config['AUTH_USERNAME'] and
+            current_app.config['AUTH_PASSWORD']
         ):
-            return await func(*args, **kwargs)
+            auth = request.authorization
+            if (
+                auth is not None and
+                auth.type == "basic" and
+                auth.username == current_app.config["AUTH_USERNAME"] and
+                compare_digest(auth.password, current_app.config["AUTH_PASSWORD"])
+            ):
+                return await func(*args, **kwargs)
+            else:
+                abort(401)
         else:
-            abort(401)
-
+            return await func(*args, **kwargs)
     return wrapper
 
 
-@auth_required
 @app.route('/', methods=['POST'])
+@auth_required
 async def scan():
     files = await request.files
     if len(files) != 1:
