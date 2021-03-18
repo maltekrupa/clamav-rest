@@ -25,4 +25,4 @@ EXPOSE $PORT
 
 COPY --from=build-image /app /app/
 
-CMD ["/app/bin/hypercorn", "-b", "0.0.0.0:8080", "clamav_rest:app"]
+CMD ["/app/bin/hypercorn", "-b", "0.0.0.0:8080", "-w", "2", "clamav_rest:app"]
