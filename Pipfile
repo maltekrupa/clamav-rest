@@ -14,6 +14,7 @@ pytest-asyncio = '==0.14.0'
 clamd = { git = 'https://github.com/temal-/python-clamd-async.git', ref = 'master' }
 hypercorn = '==0.11.2'
 quart = '==0.14.1'
+aioprometheus = "==20.0.1"
 
 [requires]
 python_version = '3.8'
