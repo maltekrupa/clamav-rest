@@ -34,9 +34,9 @@ def auth_required(func):
             auth = request.authorization
             if (
                 auth is not None and
-                auth.type == "basic" and
-                auth.username == current_app.config["AUTH_USERNAME"] and
-                compare_digest(auth.password, current_app.config["AUTH_PASSWORD"])
+                auth.type == 'basic' and
+                auth.username == current_app.config['AUTH_USERNAME'] and
+                compare_digest(auth.password, current_app.config['AUTH_PASSWORD'])
             ):
                 return await func(*args, **kwargs)
             else:
