@@ -4,7 +4,7 @@ ENV WORKDIR /app
 ENV PYTHONUSERBASE $WORKDIR
 ENV PATH=$WORKDIR/bin:$PATH
 
-RUN apk add -U git
+RUN apk add -U git musl-dev build-base
 RUN pip install --upgrade pip pipenv
 
 WORKDIR $WORKDIR
@@ -25,4 +25,4 @@ EXPOSE $PORT
 
 COPY --from=build-image /app /app/
 
-CMD ["/app/bin/hypercorn", "-b", "0.0.0.0:8080", "clamav_rest:app"]
+CMD ["/app/bin/hypercorn", "-k", "uvloop", "-b", "0.0.0.0:8080", "clamav_rest:app"]
