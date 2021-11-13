@@ -1,4 +1,4 @@
-FROM python:3.9-alpine3.13 AS build-image
+FROM python:3.10-alpine3.13 AS build-image
 
 ENV WORKDIR /app
 ENV PYTHONUSERBASE $WORKDIR
@@ -13,7 +13,7 @@ ADD . $WORKDIR
 RUN PIP_USER=1 PIP_IGNORE_INSTALLED=1 pipenv install --system --deploy
 
 
-FROM python:3.9-alpine3.13 AS runtime-image
+FROM python:3.10-alpine3.13 AS runtime-image
 
 ENV WORKDIR /app
 WORKDIR $WORKDIR

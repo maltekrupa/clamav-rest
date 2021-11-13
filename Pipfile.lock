@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1fcf34b8f59a2137706d72c08755ca72f3930d34fac4332a004ae308f5769324"
+            "sha256": "c41d10d77729bad726fa3962dba3bdd7aec5899334e95a5e51f2644f1ff6676c"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.9"
+            "python_version": "3.10"
         },
         "sources": [
             {
@@ -26,10 +26,10 @@
         },
         "aioprometheus": {
             "hashes": [
-                "sha256:1e513c9b0ed35c0192e851bcfc637ac6af74602059b82d9bec6f1a402b91d785"
+                "sha256:7e4876e892590d6bf9ca2971d14ac4c370541be15cd12b01be32b2178a48b38b"
             ],
             "index": "pypi",
-            "version": "==20.0.1"
+            "version": "==21.9.1"
         },
         "blinker": {
             "hashes": [
@@ -39,7 +39,7 @@
         },
         "clamd": {
             "git": "https://github.com/temal-/python-clamd-async.git",
-            "ref": "fef088ff96559c9601eda56d2287dd3e3ca3af0e"
+            "ref": "a4efe6ff4507e9b7075b4a9f8d34cfdcceecd3ff"
         },
         "click": {
             "hashes": [
@@ -78,11 +78,11 @@
                 "uvloop"
             ],
             "hashes": [
-                "sha256:5ba1e719c521080abd698ff5781a2331e34ef50fc1c89a50960538115a896a9a",
-                "sha256:8007c10f81566920f8ae12c0e26e146f94ca70506da964b5a727ad610aa1d821"
+                "sha256:0504720bfc3fad83b4520b37fa5032b75ee3f2e71d26d6f7fea41fa2995b0138",
+                "sha256:485a03dc171549dd802c5a2d4cce2d46daf077fbc06c7db90e0862ebc1bd07c9"
             ],
             "index": "pypi",
-            "version": "==0.11.2"
+            "version": "==0.12.0"
         },
         "hyperframe": {
             "hashes": [
@@ -199,11 +199,11 @@
         },
         "quart": {
             "hashes": [
-                "sha256:429c5b4ff27e1d2f9ca0aacc38f6aba0ff49b38b815448bf24b613d3de12ea02",
-                "sha256:7b13786e07541cc9ce1466fdc6a6ccd5f36eb39118edd25a42d617593cd17707"
+                "sha256:5ab34f4b588192b7b9aa20cbf3eae947c06fd82c2c6bcb6cd295351df335fad2",
+                "sha256:69be1aae33ae8a218905c04566254dc8eb78421121edd68bafddc16ec3e38cc6"
             ],
             "index": "pypi",
-            "version": "==0.14.1"
+            "version": "==0.16.0"
         },
         "toml": {
             "hashes": [
