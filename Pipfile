@@ -7,8 +7,8 @@ verify_ssl = true
 flake8 = '*'
 pytest = '*'
 requests = '*'
-pytest-docker = '==0.8.0'
-pytest-asyncio = '==0.14.0'
+pytest-docker = '==0.10.3'
+pytest-asyncio = '==0.16.0'
 
 [packages]
 clamd = { git = 'https://github.com/temal-/python-clamd-async.git', ref = '1.1.1' }
