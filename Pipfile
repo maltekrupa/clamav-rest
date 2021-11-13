@@ -17,4 +17,4 @@ quart = '==0.14.1'
 aioprometheus = "==20.0.1"
 
 [requires]
-python_version = '3.8'
+python_version = '3.9'
