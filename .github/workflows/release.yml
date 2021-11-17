@@ -36,4 +36,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: maltekrupa/clamav-rest:latest, maltekrupa/clamav-rest:${{needs.tag-and-release.outputs.new_tag}}
+          tags: ghcr.io/maltekrupa/clamav-rest:latest, ghcr.io/maltekrupa/clamav-rest:${{needs.tag-and-release.outputs.new_tag}}
