@@ -3,4 +3,3 @@
 !Pipfile.lock
 !clamav_rest.py
 !config.py
-!gunicorn.config.py
