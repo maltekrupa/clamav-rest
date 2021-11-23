@@ -23,6 +23,8 @@ jobs:
   publish:
     needs: tag-and-release
     runs-on: ubuntu-latest
+    # only run this job if the previous job created a new tag
+    if: needs.tag-and-release.outputs.new_tag != ''
     steps:
       - name: Checkout
         uses: actions/checkout@v2
