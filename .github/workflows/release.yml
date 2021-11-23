@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - migrate-to-ghcr
 
 jobs:
   tag-and-release:
@@ -18,7 +17,7 @@ jobs:
         uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_BRANCHES: main,migrate-to-ghcr
+          RELEASE_BRANCHES: main
 
   publish:
     needs: tag-and-release
