@@ -3,79 +3,67 @@
 ## Acknowledgment
 
 This project was forked from [dit-clamav-rest](https://github.com/uktrade/dit-clamav-rest)
-and changed to fit my needs.
+in mid 2019 and changed to fit my needs.
 
 The initial introduction still stands:
 
+> This is a python-based REST interface to ClamD inspired by https://github.com/solita/clamav-rest
+
+## Quickstart
+
+### Setup
+
+After cloning the repository, you can use docker-compose to get a
+working setup up and running.
+
 ```
-This is a python-based REST interface to ClamD
-inspired by https://github.com/solita/clamav-rest
+git clone https://github.com/maltekrupa/clamav-rest.git
+cd clamav-rest/examples/docker-compose
+docker-compose up
 ```
 
-## Intention
+Observe the health status of all services using `docker ps`. Clamd might take a
+while on its first start because it needs to download new signatures.
 
-I needed a solution to check files for infections which could easily be deployed
-to kubernetes.
+### Usage
 
-Other solutions and my reasons for not using them:
+Send a file to the `/` endpoint via a HTTP POST request using the Content-Type
+`multipart/form-data` and receive some JSON in return which contains information
+about the infection state of the file you sent.
 
-- [solita](https://github.com/solita/clamav-rest) was too old (Springboot+JDK
-from somewhere in 2016) and based on the JVM.
-- [uktrade](https://github.com/uktrade/dit-clamav-rest) has a mandatory basic
-auth.
+An example using `curl` and the local docker-compose setup to scan a file called
+`example.pdf` would look like this:
 
-## Running with docker-compose
+```
+curl -F 'data=@example.pdf' localhost:8080
+```
 
-Check the
-[docker-compose.yml](https://github.com/temal-/clamav-rest/blob/master/docker-compose.yml)
-for a working example with
-[mk0x/docker-clamav:alpine](https://hub.docker.com/r/mk0x/docker-clamav) as
-clamd backend.
+The response will look something like this:
 
-A container image is available at
-[dockerhub](https://hub.docker.com/r/temal/clamav-rest).
+```
+{"malware":false,"reason":null,"time":0.14232846899903961}
+```
 
 ## Optional basic auth
 
-If you want to secure the virus scanning endpoint (`POST` on `/`) via basic
-auth, you'll have to provide both `AUTH_USERNAME` and `AUTH_PASSWORD` to make
-this work.
+If you want to secure the virus scanning endpoint (`POST /`) via basic
+auth, you'll have to provide both environment variables `AUTH_USERNAME` and
+`AUTH_PASSWORD` to make it work.
 
 If only one of them is set, basic auth is still disabled!
 
-## Development
+## Health check endpoints
 
-Requirements:
+Two health check endpoints exist.
 
-- python3
-- pipenv
-- docker
+`GET /health/live` will always return a HTTP 200 as soon as the service is started.
 
-### Starting service via docker
+`GET /health/ready` will return a HTTP 200 if `clamav-rest` can communicate with
+`clamd` and a HTTP 502 in case it cannot communicate with `clamd`.
 
-Run the following to get up and running:
+## Metrics
 
-```
-docker-compose up -d
-```
-
-### Rebuild container after change
-
-After changing code, run the following command to renew the clamav-rest container:
-
-```
-docker-compose up -d --remove-orphans --build clamav_rest
-```
-
-### Run tests locally
-
-To run the tests, do the following:
-
-```
-pipenv shell
-pipenv install -d
-pipenv run pytest
-```
+Some metrics are available at `GET /metrics`.
 
 ## Environment variables
 

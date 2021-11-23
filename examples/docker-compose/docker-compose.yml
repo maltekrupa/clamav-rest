@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+
+  clamav_rest:
+    image: ghcr.io/maltekrupa/clamav-rest:latest
+    networks:
+      - clamav-rest
+    ports:
+      - '8080:8080'
+    healthcheck:
+      test: wget -q localhost:8080/health/ready -O /dev/null
+
+  clamav:
+    image: clamav/clamav
+    networks:
+      - clamav-rest
+    ports:
+      - '3310:3310'
+    healthcheck:
+      test: nc -z localhost 3310
+
+networks:
+  clamav-rest:
