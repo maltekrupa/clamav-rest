@@ -32,7 +32,7 @@ services:
       - AUTH_USERNAME=foo
 
   clamav:
-    image: mkodockx/docker-clamav
+    image: clamav/clamav
     networks:
       - overlay
     ports:
