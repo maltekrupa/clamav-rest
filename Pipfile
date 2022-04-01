@@ -7,14 +7,14 @@ verify_ssl = true
 flake8 = '*'
 pytest = '*'
 requests = '*'
-pytest-docker = '==0.10.3'
-pytest-asyncio = '==0.16.0'
+pytest-docker = '==0.11.0'
+pytest-asyncio = '==0.18.3'
 
 [packages]
 clamd = { git = 'https://github.com/temal-/python-clamd-async.git', ref = '1.1.1' }
-hypercorn = {extras = ["uvloop"], version = "==0.12.0"}
-quart = '==0.16.0'
-aioprometheus = "==21.9.1"
+hypercorn = {extras = ['uvloop'], version = '==0.13.2'}
+quart = '==0.17.0'
+aioprometheus = '==22.3.0'
 
 [requires]
 python_version = '3.10'
