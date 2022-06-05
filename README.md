@@ -70,6 +70,7 @@ Some metrics are available at `GET /metrics`.
 | Environment variable | Required | Default | Purpose |
 | -------------------- | -------- | ------- | ------- |
 | LOGLEVEL             | false    | INFO    | Loglevel |
+| LOGJSON              | false    | True    | If enabled, most logs are in JSON format |
 | CLAMD_HOST           | false    | clamav  | Hostname where to reach clamav container |
 | CLAMD_PORT           | false    | 3310    | Port where to reach clamav container |
 | LISTEN_HOST          | false    | 0.0.0.0 | IP to listen on inside container |
