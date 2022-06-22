@@ -8,4 +8,4 @@ CLAMD_PORT = int(os.environ.get('CLAMD_PORT', 3310))
 AUTH_USERNAME = os.environ.get('AUTH_USERNAME', None)
 AUTH_PASSWORD = os.environ.get('AUTH_PASSWORD', None)
 
-MAX_CONTENT_LENGTH = os.environ.get('MAX_CONTENT_LENGTH', 16777216)
+MAX_CONTENT_LENGTH = int(os.environ.get('MAX_CONTENT_LENGTH', 16777216))
