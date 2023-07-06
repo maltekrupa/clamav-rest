@@ -1,4 +1,4 @@
-import logging
+import logging, json_logging
 import sys
 import timeit
 from functools import wraps
@@ -12,7 +12,7 @@ import clamd
 app = Quart(__name__)
 app.config.from_pyfile('config.py')
 
-# configure metrics
+# Configure metrics
 app.registry = Registry()
 app.request_counter = Counter('requests', 'Number of overall requests.')
 app.registry.register(app.request_counter)
@@ -23,9 +23,18 @@ app.registry.register(app.infection_counter)
 app.scan_duration_histogram = Histogram('scan_duration', 'Histogram over virus scan duration.')
 app.registry.register(app.scan_duration_histogram)
 
-logging.basicConfig(stream=sys.stdout, level=app.config['LOGLEVEL'])
-logger = logging.getLogger('CLAMAV-REST')
+# Configure logging
+if app.config['LOGJSON']:
+    do_not_log = ['/health', '/metrics']
 
+    json_logging.init_quart(enable_json=True)
+    json_logging.init_request_instrument(app, exclude_url_patterns=do_not_log)
+
+logger = logging.getLogger('clamav-rest')
+logger.setLevel(app.config['LOGLEVEL'])
+logger.addHandler(logging.StreamHandler(sys.stdout))
+
+# Configure clamd
 try:
     cd = clamd.ClamdAsyncNetworkSocket(
         host=app.config['CLAMD_HOST'],
@@ -61,7 +70,7 @@ def auth_required(func):
 @app.route('/', methods=['POST'])
 @auth_required
 async def scan():
-    # metric
+    # Metric
     app.request_counter.inc({'path': '/'})
 
     files = await request.files
@@ -70,7 +79,7 @@ async def scan():
 
     _, file_data = list(files.items())[0]
 
-    logger.info('Scanning {file_name}'.format(
+    logger.debug('Scanning {file_name}'.format(
         file_name=file_data.filename
     ))
 
@@ -82,12 +91,12 @@ async def scan():
         return 'Service Unavailable', 502
     elapsed = timeit.default_timer() - start_time
 
-    # metric
+    # Metric
     app.scan_duration_histogram.observe({'time': 'scan_duration'}, elapsed)
 
     status, reason = resp['stream']
 
-    # metric
+    # Metric
     if status != 'OK':
         app.infection_counter.inc({'path': '/'})
 
@@ -103,16 +112,17 @@ async def scan():
                 file_name=file_data.filename,
                 elapsed=elapsed,
                 status=response['malware']
-            )
+            ),
+            extra={'props': response}
     )
 
-    # metric
+    # Metric
     app.scan_counter.inc({'path': '/'})
 
     return jsonify(response)
 
 
-# metrics endpoint
+# Metrics endpoint
 @app.route('/metrics')
 async def handle_metrics():
     content, http_headers = render(app.registry, request.headers.getlist('accept'))

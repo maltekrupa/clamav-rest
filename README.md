@@ -67,15 +67,16 @@ Some metrics are available at `GET /metrics`.
 
 ## Environment variables
 
-| Environment variable | Required | Default | Purpose |
-| -------------------- | -------- | ------- | ------- |
-| LOGLEVEL             | false    | INFO    | Loglevel |
-| CLAMD_HOST           | false    | clamav  | Hostname where to reach clamav container |
-| CLAMD_PORT           | false    | 3310    | Port where to reach clamav container |
-| LISTEN_HOST          | false    | 0.0.0.0 | IP to listen on inside container |
-| LISTEN_PORT          | false    | 8080    | Port to listen on inside container |
-| AUTH_USERNAME        | false    |         | Username for optional basic auth |
-| AUTH_PASSWORD        | false    |         | Password for optional basic auth |
-| MAX_CONTENT_LENGTH   | false    |         | Override default max length |
-| RESPONSE_TIMEOUT     | false    | 60      | Override default response timeout for Flask |
-| BODY_TIMEOUT         | false    | 60      | Override default body timeout for Flask |
+| Environment variable | Required | Default  | Purpose                                     |
+|----------------------|----------|----------|---------------------------------------------|
+| LOGLEVEL             | false    | INFO     | Loglevel                                    |
+| LOGJSON              | false    | True     | If enabled, most logs are in JSON format    |
+| CLAMD_HOST           | false    | clamav   | Hostname where to reach clamav container    |
+| CLAMD_PORT           | false    | 3310     | Port where to reach clamav container        |
+| LISTEN_HOST          | false    | 0.0.0.0  | IP to listen on inside container            |
+| LISTEN_PORT          | false    | 8080     | Port to listen on inside container          |
+| AUTH_USERNAME        | false    |          | Username for optional basic auth            |
+| AUTH_PASSWORD        | false    |          | Password for optional basic auth            |
+| MAX_CONTENT_LENGTH   | false    | 16777216 | The maximum request size in bytes (16MB)    |
+| RESPONSE_TIMEOUT     | false    | 60       | Override default response timeout for Flask |
+| BODY_TIMEOUT         | false    | 60       | Override default body timeout for Flask     |
