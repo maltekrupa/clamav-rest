@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9717aede476253ef7921160075fd331f6b3a3c9e03988fb70ac449dece0e5397"
+            "sha256": "d6dcb106fb4cf15aafa9672e0139bde0205d0776bc6654dfe8f12b013332a5ec"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.10"
+            "python_version": "3.11"
         },
         "sources": [
             {
@@ -26,18 +26,18 @@
         },
         "aioprometheus": {
             "hashes": [
-                "sha256:d68abc40b0650ac2e70a7f9392b6196ee73dbe26533d40ecd85321b02fd81930"
+                "sha256:142cd23d00b31e7c498bb4d03f390b93fcae0225aa6dbb97f3c731fc337561b8"
             ],
             "index": "pypi",
-            "version": "==22.5.0"
+            "version": "==23.3.0"
         },
         "blinker": {
             "hashes": [
-                "sha256:4afd3de66ef3a9f8067559fb7a1cbe555c17dcbe15971b05d1b625c3e7abe213",
-                "sha256:c3d739772abb7bc2860abf5f2ec284223d9ad5c76da018234f6f50d6f31ab1f0"
+                "sha256:1eb563df6fdbc39eeddc177d953203f99f097e9bf0e2b8f9f3cf18b6ca425e36",
+                "sha256:923e5e2f69c155f2cc42dafbbd70e16e3fde24d2d4aa2ab72fbe386238892462"
             ],
-            "markers": "python_version >= '3.7'",
-            "version": "==1.6.2"
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
+            "version": "==1.5"
         },
         "clamd": {
             "git": "https://github.com/temal-/python-clamd-async.git",
@@ -80,11 +80,11 @@
                 "uvloop"
             ],
             "hashes": [
-                "sha256:6307be5cbdf6ba411967d4661202dc4f79bd511b5d318bc4eed88b09418427f8",
-                "sha256:ca18f91ab3fa823cbe9e949738f9f2cc07027cd647c80d8f93e4b1a2a175f112"
+                "sha256:3fa504efc46a271640023c9b88c3184fd64993f47a282e8ae1a13ccb285c2f67",
+                "sha256:f956200dbf8677684e6e976219ffa6691d6cf795281184b41dbb0b135ab37b8d"
             ],
             "index": "pypi",
-            "version": "==0.13.2"
+            "version": "==0.14.4"
         },
         "hyperframe": {
             "hashes": [
@@ -242,19 +242,11 @@
         },
         "quart": {
             "hashes": [
-                "sha256:2cf213d8b83fa701a83e3b3125e9102a937cefd1e97e9583f22ee2fa79139640",
-                "sha256:69480e7384935feff1f50293a8cb70c5d31f568af94ed792d043bb368b50bd50"
+                "sha256:578a466bcd8c58b947b384ca3517c2a2f3bfeec8f58f4ff5038d4506ffee6be7",
+                "sha256:c1766f269cdb85daf9da67ba54170abf7839aca97304dcb4cd0778eabfb442c6"
             ],
             "index": "pypi",
-            "version": "==0.17.0"
-        },
-        "toml": {
-            "hashes": [
-                "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b",
-                "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"
-            ],
-            "markers": "python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-            "version": "==0.10.2"
+            "version": "==0.18.4"
         },
         "uvloop": {
             "hashes": [
