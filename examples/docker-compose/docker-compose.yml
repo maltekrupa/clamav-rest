@@ -12,7 +12,7 @@ services:
       test: wget -q localhost:8080/health/ready -O /dev/null
 
   clamav:
-    image: clamav/clamav
+    image: clamav/clamav:unstable
     networks:
       - clamav-rest
     ports:
