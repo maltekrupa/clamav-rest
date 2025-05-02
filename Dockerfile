@@ -1,4 +1,4 @@
-FROM python:3.13-alpine AS build-image
+FROM python:3.13-alpine3.21 AS build-image
 
 ENV WORKDIR=/app
 ENV PYTHONUSERBASE=$WORKDIR
@@ -12,8 +12,7 @@ ADD . $WORKDIR
 
 RUN PIP_USER=1 PIP_IGNORE_INSTALLED=1 pipenv install --system --deploy
 
-
-FROM python:3.13-alpine AS runtime-image
+FROM python:3.13-alpine3.21 AS runtime-image
 
 LABEL org.opencontainers.image.source=https://github.com/maltekrupa/clamav-rest
 
