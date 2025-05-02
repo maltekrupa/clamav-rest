@@ -80,3 +80,14 @@ Some metrics are available at `GET /metrics`.
 | MAX_CONTENT_LENGTH   | false    | 16777216 | The maximum request size in bytes (16MB)    |
 | RESPONSE_TIMEOUT     | false    | 60       | Override default response timeout for Flask |
 | BODY_TIMEOUT         | false    | 60       | Override default body timeout for Flask     |
+
+## Tests
+
+> [!IMPORTANT]
+> The tests make use of docker and docker compose!
+
+You can run all tests via `uv`:
+
+```
+uv run python -m pytest
+```
