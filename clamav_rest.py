@@ -1,4 +1,4 @@
-import logging, json_logging
+import logging
 import sys
 import timeit
 from functools import wraps
@@ -6,6 +6,7 @@ from secrets import compare_digest
 
 from quart import Quart, request, jsonify, current_app, abort
 from aioprometheus import Counter, Histogram, Registry, render
+import json_logging
 
 import clamd
 
