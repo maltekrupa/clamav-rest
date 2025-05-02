@@ -8,36 +8,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v2
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+
+    - name: "Set up Python"
+      uses: actions/setup-python@v5
       with:
-        python-version: "3.12"
-    - uses: dschep/install-pipenv-action@v1
-    - name: Install dependencies
-      run: |
-        pipenv install -d
+        python-version-file: ".python-version"
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        uv run flake8 clamav_rest.py config.py --count --show-source --max-line-length=127 --statistics
 
   test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v2
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+
+    - name: "Set up Python"
+      uses: actions/setup-python@v5
       with:
-        python-version: "3.12"
-    - uses: dschep/install-pipenv-action@v1
-    - name: Install dependencies
+        python-version-file: ".python-version"
+
+    - name: Install the project
+      run: uv sync --locked --all-extras --dev
+
+    - name: Run tests
       run: |
-        pipenv install -d
-    - name: Configure PYTHONPATH
-      run: |
-        echo "PYTHONPATH=${PYTHONPATH}:${PWD}" >> $GITHUB_ENV
-    - name: Test with pytest
-      run: |
-        pipenv run pytest --asyncio-mode=strict
+        uv run python -m pytest
