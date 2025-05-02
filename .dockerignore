@@ -1,5 +1,5 @@
 *
-!Pipfile
-!Pipfile.lock
+!pyproject.toml
+!uv.lock
 !clamav_rest.py
 !config.py

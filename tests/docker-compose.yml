@@ -5,6 +5,7 @@ services:
   # without basic auth
   clamav_rest:
     build: ..
+    platform: "linux/amd64"
     networks:
       - overlay
     ports:
@@ -13,6 +14,7 @@ services:
   # with basic auth
   clamav_rest_auth:
     build: ..
+    platform: "linux/amd64"
     networks:
       - overlay
     ports:
@@ -24,6 +26,7 @@ services:
   # with wrongly configured basic auth
   clamav_rest_auth_defunct:
     build: ..
+    platform: "linux/amd64"
     networks:
       - overlay
     ports:
@@ -33,6 +36,7 @@ services:
 
   clamav:
     image: clamav/clamav:unstable
+    platform: "linux/amd64"
     networks:
       - overlay
     ports:
